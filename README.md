@@ -50,6 +50,21 @@ share almost no surface text. If you want those to hit, implement the small
 and pass it in. The cache, similarity search, TTL, eviction, and accounting stay
 exactly the same. See [`embedder.py`](src/llm_semantic_cache/embedder.py).
 
+## How it flows
+
+```mermaid
+flowchart LR
+    A[Prompt] --> B[Embed]
+    B --> C[Vector search]
+    C --> D{"similarity >= threshold?"}
+    D -->|hit| E[Return cached response]
+    D -->|miss| F[Call LLM]
+    F --> G[Store embedding and response]
+    G --> H[Return response]
+    E --> M["Update hit-rate and cost saved"]
+    H --> M
+```
+
 ## Getting started
 
 ```bash
